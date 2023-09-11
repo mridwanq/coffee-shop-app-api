@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { productController } = require('../controllers');
+const { productMulter } = require('../middlewares/multers');
 
 router.get('/', productController.getAllProducts);
 router.get('/search', productController.getProductByName);
@@ -8,7 +9,11 @@ router.get('/v2', productController.sortByProductNameDesc);
 router.get('/p1', productController.sortByPriceAsc);
 router.get('/p2', productController.sortByPriceDesc);
 router.get('/:id', productController.getProductById);
-router.post('/', productController.createProduct);
+router.post(
+  '/',
+  productMulter.productImageUploader().single('productImage'),
+  productController.createProduct
+);
 router.patch(
   '/:id',
   productController.editProductById,
