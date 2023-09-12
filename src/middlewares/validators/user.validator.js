@@ -1,4 +1,4 @@
 const newCashierAccount = (req, res, next) => {
-    //bersihin account
-    const {username}
+  //bersihin account
+  // const {username}
 };
