@@ -1,12 +1,13 @@
-'use strict';
+"use strict";
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
+require("dotenv").config();
+const fs = require("fs");
+const path = require("path");
+const Sequelize = require("sequelize");
+const process = require("process");
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.js')[env];
+const env = process.env.NODE_ENV || "development";
+const config = require(__dirname + "/../config/config.js")[env];
 const db = {};
 
 let sequelize;
@@ -24,10 +25,10 @@ if (config.use_env_variable) {
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
-      file.indexOf('.') !== 0 &&
+      file.indexOf(".") !== 0 &&
       file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
+      file.slice(-3) === ".js" &&
+      file.indexOf(".test.js") === -1
     );
   })
   .forEach((file) => {
@@ -43,6 +44,16 @@ Object.keys(db).forEach((modelName) => {
     db[modelName].associate(db);
   }
 });
+
+const associateModel = (path) => {
+  const model = require(path)(sequelize, Sequelize);
+  model.associate(db);
+  return model;
+};
+
+db.User = associateModel("./user");
+db.Product = associateModel("./product");
+db.User_role = associateModel("./user_role");
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
