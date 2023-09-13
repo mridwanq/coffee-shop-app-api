@@ -3,6 +3,7 @@ const {
   userBodyValidationRules,
   newCashierAccountValidator,
   adminValidator,
+  deleteCashierAccountValidator,
 } = require("../middlewares/validators/user.validator");
 const route = require("express").Router();
 
@@ -25,6 +26,13 @@ route.post(
   newCashierAccountValidator,
   adminValidator,
   UserController.create.bind(UserController)
+);
+
+route.delete(
+  "/:id",
+  deleteCashierAccountValidator,
+  adminValidator,
+  UserController.delete.bind(UserController)
 );
 
 module.exports = route;
