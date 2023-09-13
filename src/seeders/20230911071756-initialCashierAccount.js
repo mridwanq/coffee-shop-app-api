@@ -16,14 +16,16 @@ module.exports = {
      */
     await queryInterface.bulkInsert("Users", [
       {
+        id: 2,
         role: 2,
-        username: "cashier",
-        email: "",
+        username: "Cashier001",
+        email: null,
         password: await bcrypt.hash("cashier123", 12),
-        phone: "",
+        phone: null,
         fullname: "cashier001",
-        image_url: "",
+        image_url: null,
         gender: "male",
+        isActive: true,
         updatedAt: sequelize.fn("NOW"),
         createdAt: sequelize.fn("NOW"),
       },

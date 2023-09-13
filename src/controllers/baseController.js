@@ -11,11 +11,15 @@ class Controller {
         ...req.body,
         logging: false,
       })
-      .then((result) => res.send(result))
+      .then((result) => {
+        delete result.dataValues.password;
+        return res.send(result.dataValues);
+      })
       .catch((err) => res.status(500).send(err?.message));
   }
   async update(req, res) {
-    const id = req.params;
+    const { id } = req.params;
+    console.log(req.body);
     await this.db
       .update({ ...req.body }, { where: { id } })
       .then((result) => res.send(result))

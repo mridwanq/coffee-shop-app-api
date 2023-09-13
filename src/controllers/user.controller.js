@@ -7,7 +7,6 @@ class UserController extends Controller {
     super(modelName);
   }
 
-  async createCashierAccount(req, res) {}
   async login(req, res) {
     const { username, password } = req.body;
     try {
@@ -17,29 +16,39 @@ class UserController extends Controller {
       });
       if (!user) throw new Error("Wrong username or password");
       const isValid = await bcrypt.compare(password, user.dataValues.password);
+      if (user.dataValues.role === 2 && !user.dataValues.isActive)
+        throw new Error("Your account is disabled");
       if (!isValid) throw new Error("Wrong username or password");
       delete user.dataValues.password;
       const token = jwt.sign(
         {
           id: user.dataValues.id,
           role: user.dataValues.role,
+          isActive: user.dataValues.isActive,
         },
         process.env.jwt_secret,
         { expiresIn: "1h" }
       );
       return res.send({ token: token, user: user.dataValues });
     } catch (err) {
-      res.status(400).send(err?.message);
+      return res.status(406).send(err.message);
     }
   }
+
   async keepLogin(req, res) {
     try {
       const { token } = req;
       const data = jwt.verify(token, process.env.jwt_secret);
-      const user = await this.db.findByPk(data.id);
+      const user = await this.db.findByPk(data.id, { logging: false });
       delete user.dataValues.password;
+      if (!user.dataValues.isActive && user.dataValues.role === 2)
+        throw new Error("Your account is disabled");
       const newToken = jwt.sign(
-        { id: user.dataValues.id, role: user.dataValues.role },
+        {
+          id: user.dataValues.id,
+          role: user.dataValues.role,
+          isActive: user.dataValues.isActive,
+        },
         process.env.jwt_secret,
         { expiresIn: "1h" }
       );
@@ -48,13 +57,20 @@ class UserController extends Controller {
       return res.status(500).send(err?.message);
     }
   }
+
   async getByQuery(req, res) {
-    const { username, fullname, email, phone, role, gender } = req.query;
-    const { count, rows } = await this.db.findAndCountAll({
-      where: {
-        ...(typeof role === "string" && { role }),
-      },
-    });
+    try {
+      const { username, fullname, email, phone, role, gender } = req.query;
+      const { count, rows } = await this.db.findAndCountAll({
+        logging: false,
+        where: {
+          ...(typeof role === "string" && { role }),
+        },
+      });
+      return res.send(rows);
+    } catch (err) {
+      return res.status(500).send(err?.message);
+    }
   }
 }
 
