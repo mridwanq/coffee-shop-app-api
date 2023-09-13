@@ -19,9 +19,8 @@ class Controller {
   }
   async update(req, res) {
     const { id } = req.params;
-    console.log(req.body);
     await this.db
-      .update({ ...req.body }, { where: { id } })
+      .update({ ...req.body }, { where: { id }, logging: false })
       .then((result) => res.send(result))
       .catch((err) => res.status(500).send(err?.message));
   }
@@ -36,6 +35,7 @@ class Controller {
     const id = req.params;
     await this.db
       .destroy({ where: id })
+      .then((result) => res.send("success"))
       .catch((err) => res.status(500).send(err?.message));
   }
 }
