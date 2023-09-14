@@ -54,6 +54,8 @@ const associateModel = (path) => {
 db.User = associateModel("./user");
 db.Product = associateModel("./product");
 db.User_role = associateModel("./user_role");
+db.Transaction = associateModel("./transaction");
+db.Transaction_details = associateModel("./transaction_details");
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
