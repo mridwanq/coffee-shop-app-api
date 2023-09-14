@@ -3,6 +3,7 @@ const {
   validateEditTransactionDetailRule,
   generalValidate,
   validateNewTransactionDetailRule,
+  validateMultiValueTransactionDetailRule,
 } = require("../middlewares/validators/transaction.validator");
 const {
   cashierValidator,
@@ -24,6 +25,16 @@ route.post(
   generalValidate,
   cashierValidator,
   TransactionDetailController.create.bind(TransactionDetailController)
+);
+
+route.post(
+  `/insert_multi_value`,
+  validateMultiValueTransactionDetailRule(),
+  generalValidate,
+  cashierValidator,
+  TransactionDetailController.createMultiValues.bind(
+    TransactionDetailController
+  )
 );
 
 module.exports = route;

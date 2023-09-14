@@ -1,11 +1,30 @@
 const { body, validationResult } = require("express-validator");
 
+const validateNewTransactionRule = () => {
+  return [
+    body("order_type").isInt({ min: 1 }),
+    body("staff").isInt({ min: 1 }),
+  ];
+};
+
 const validateEditTransactionRule = () => {
   return [
     body("id").isInt({ min: 1 }),
     body("total").isFloat({ gt: 0 }).optional({ nullable: true }),
+    body("order_type").isInt({ min: 1 }),
     body("isPaid").isBoolean().optional({ nullable: true }),
     body("staff").isInt({ min: 1 }),
+  ];
+};
+
+const validateMultiValueTransactionDetailRule = () => {
+  return [
+    body().isArray(),
+    body("*.transactionId").isInt({ min: 1 }),
+    body("*.productId").isInt({ min: 1 }),
+    body("*.price").isFloat({ gt: 0 }),
+    body("*.qty").isInt({ min: 0 }),
+    body("*.status").isInt({ min: 1 }),
   ];
 };
 
@@ -15,6 +34,7 @@ const validateNewTransactionDetailRule = () => {
     body("productId").isInt({ min: 1 }),
     body("price").isFloat({ gt: 0 }),
     body("qty").isInt({ min: 0 }),
+    body("status").isInt({ min: 1 }),
   ];
 };
 
@@ -25,6 +45,7 @@ const validateEditTransactionDetailRule = () => {
     body("productId").isInt({ min: 1 }),
     body("price").isFloat({ gt: 0 }),
     body("qty").isInt({ min: 0 }),
+    body("status").isInt({ min: 1 }),
   ];
 };
 
@@ -45,8 +66,10 @@ const generalValidate = (req, res, next) => {
 };
 
 module.exports = {
+  validateNewTransactionRule,
   validateEditTransactionRule,
   validateEditTransactionDetailRule,
   validateNewTransactionDetailRule,
+  validateMultiValueTransactionDetailRule,
   generalValidate,
 };

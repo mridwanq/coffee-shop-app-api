@@ -14,12 +14,16 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
+      Transaction.belongsTo(models.Transaction_order_type, {
+        foreignKey: "order_type",
+      });
     }
   }
   Transaction.init(
     {
       name: { type: DataTypes.STRING, allowNull: true },
       total: { type: DataTypes.INTEGER, allowNull: true, defaultValue: 0 },
+      order_type: { type: DataTypes.INTEGER, allowNull: false },
       isPaid: { type: DataTypes.BOOLEAN, defaultValue: false },
       staff: { type: DataTypes.INTEGER, allowNull: false },
     },

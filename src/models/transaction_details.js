@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       Transaction_details.belongsTo(models.Product, {
         foreignKey: "productId",
       });
+      Transaction_details.belongsTo(models.Transaction_detail_status, {
+        foreignKey: "status",
+      });
     }
   }
   Transaction_details.init(
@@ -23,6 +26,8 @@ module.exports = (sequelize, DataTypes) => {
       productId: { type: DataTypes.INTEGER, allowNull: false },
       price: { type: DataTypes.INTEGER, allowNull: false },
       qty: DataTypes.INTEGER,
+      discount: { type: DataTypes.INTEGER, defaultValue: 0 },
+      status: DataTypes.INTEGER,
     },
     {
       sequelize,
