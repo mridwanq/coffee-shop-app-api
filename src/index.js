@@ -13,7 +13,12 @@ app.use(express.json());
 app.use(bearertoken());
 app.use("/users", routers.userRouter);
 app.use("/products", routers.productRouter);
-// app.use('/transactions', routes.transactionRouter);
+app.use("/transactions", routers.transactionRouter);
+app.use("/transaction_details", routers.transactionDetailRouter);
+app.use(
+  "/public/product",
+  express.static(`${__dirname}/../public/images/productImages`)
+);
 
 app.get("/test", (req, res) => {
   res.send("welcome my coffee shop API");

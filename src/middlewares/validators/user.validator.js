@@ -11,6 +11,9 @@ const userBodyValidationRules = () => {
       .optional({ nullable: true }),
     body("password").isLength({ min: 8 }).withMessage("too short"),
     body("username").isLength({ min: 5 }).withMessage("too short"),
+    body("username")
+      .custom((value) => /^(\w|-)+$/.test(value))
+      .withMessage("Only alphanumeric, _ , and - are allowed in the username"),
     body("fullname").isLength({ min: 3 }).withMessage("too short"),
     body("phone")
       .isMobilePhone()
@@ -52,9 +55,23 @@ const adminValidator = async (req, res, next) => {
     return res.status(400).send(err?.message);
   }
 };
-const cashierStatusValidator = (req, res, next) => {
-  //check enable disable status
-  //check role
+const cashierValidator = async (req, res, next) => {
+  try {
+    const username = req.headers["api-key"];
+    const { token } = req;
+    const data = jwt.verify(token, process.env.jwt_secret);
+    const user = await db.User.findOne({ where: { username }, logging: false });
+    if (!user) throw new Error("Your credential does not match");
+    if (user.dataValues.id !== data.id) throw new Error("Invalid account");
+    if (!user.dataValues.isActive && user.dataValues.role === 2)
+      throw new Error("Your account is disabled");
+    if (!data.isActive && data.role === 2)
+      throw new Error("Your account is disabled");
+    req.body.staff = data.id;
+    next();
+  } catch (err) {
+    return res.status(400).send(err?.message);
+  }
 };
 
 const deleteCashierAccountValidator = async (req, res, next) => {
@@ -76,4 +93,5 @@ module.exports = {
   newCashierAccountValidator,
   adminValidator,
   deleteCashierAccountValidator,
+  cashierValidator,
 };

@@ -1,5 +1,5 @@
 "use strict";
-const bcrypt = require("bcrypt");
+
 const { sequelize } = require("../models");
 
 /** @type {import('sequelize-cli').Migration} */
@@ -14,20 +14,24 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    await queryInterface.bulkInsert("Users", [
+    await queryInterface.bulkInsert("Transaction_order_types", [
       {
         id: 1,
-        role: 1,
-        username: "admin",
-        email: null,
-        password: await bcrypt.hash("1adminCoffeeShop@", 12),
-        phone: null,
-        fullname: "admin",
-        image_url: null,
-        gender: "male",
-        isActive: true,
-        updatedAt: sequelize.fn("NOW"),
+        order_type: "Dine In",
         createdAt: sequelize.fn("NOW"),
+        updatedAt: sequelize.fn("NOW"),
+      },
+      {
+        id: 2,
+        order_type: "Take Away",
+        createdAt: sequelize.fn("NOW"),
+        updatedAt: sequelize.fn("NOW"),
+      },
+      {
+        id: 3,
+        order_type: "Catering",
+        createdAt: sequelize.fn("NOW"),
+        updatedAt: sequelize.fn("NOW"),
       },
     ]);
   },
