@@ -29,11 +29,11 @@ const categoryController = {
 
   getCategoryByName: async (req, res) => {
     try {
-      const { categoryName } = req.query;
+      const { category_name } = req.query;
       const result = await Category.findAll({
         where: {
-          categoryName: {
-            [Sequelize.Op.like]: `%${categoryName}%`,
+          category_name: {
+            [Sequelize.Op.like]: `%${category_name}%`,
           },
         },
       });

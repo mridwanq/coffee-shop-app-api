@@ -58,6 +58,7 @@ db.Transaction = associateModel("./transaction");
 db.Transaction_details = associateModel("./transaction_details");
 db.Transaction_detail_status = associateModel("./transaction_detail_status");
 db.Transaction_order_type = associateModel("./transaction_order_type");
+db.Category = associateModel("./category");
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

@@ -22,7 +22,7 @@ module.exports = {
         desc: "Cap Jagung",
         price: 16000,
         stock: 999,
-        category: 1,
+        categoryId: 1,
         createdAt: sequelize.fn("NOW"),
         updatedAt: sequelize.fn("NOW"),
       },
