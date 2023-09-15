@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
           unique: false,
         },
       });
+      Product.hasMany(models.Transaction_details, { foreignKey: "productId" });
     }
   }
   Product.init(

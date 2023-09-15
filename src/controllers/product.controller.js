@@ -3,7 +3,7 @@ const { Sequelize, sequelize, Product } = require("../models");
 const productController = {
   getAllProducts: async (req, res) => {
     try {
-      const result = await Product.findAll();
+      const result = await Product.findAll({ logging: false });
       res.status(200).json({
         status: "success",
         data: result,
