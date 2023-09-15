@@ -36,6 +36,7 @@ class TransactionController extends Controller {
     await this.db
       .findAndCountAll({
         where: { isPaid: { [Op.notIn]: [1, true] } },
+        order: [["createdAt", "desc"]],
         logging: false,
       })
       .then((result) => res.send(result))
