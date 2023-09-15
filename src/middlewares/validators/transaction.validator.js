@@ -19,7 +19,7 @@ const validateEditTransactionRule = () => {
 
 const validateMultiValueTransactionDetailRule = () => {
   return [
-    body().isArray(),
+    body().isArray().withMessage("not an array"),
     body("*.transactionId").isInt({ min: 1 }),
     body("*.productId").isInt({ min: 1 }),
     body("*.price").isFloat({ gt: 0 }),
