@@ -16,6 +16,7 @@ class TransactionController extends Controller {
           {
             model: db.Transaction_details,
             attributes: [
+              "id",
               "transactionId",
               "status",
               "productId",
