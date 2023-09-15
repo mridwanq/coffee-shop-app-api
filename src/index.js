@@ -21,12 +21,11 @@ app.use(
   express.static(`${__dirname}/../public/images/productImages`)
 );
 
-
 app.get("/test", (req, res) => {
   res.send("welcome my coffee shop API");
 });
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
-  db.sequelize.sync({ alter: true });
+  db.sequelize.sync({ force: true });
 });
