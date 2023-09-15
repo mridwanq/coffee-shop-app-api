@@ -13,6 +13,7 @@ app.use(express.json());
 app.use(bearertoken());
 app.use("/users", routers.userRouter);
 app.use("/products", routers.productRouter);
+app.use("/category", routers.categoryRouter);
 // app.use('/transactions', routes.transactionRouter);
 
 app.get("/test", (req, res) => {
@@ -21,5 +22,5 @@ app.get("/test", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
-  // db.sequelize.sync({ alter: true });
+  db.sequelize.sync({ alter: true });
 });
