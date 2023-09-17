@@ -1,4 +1,5 @@
 const { body, validationResult } = require("express-validator");
+const db = require("../../models");
 
 const validateNewTransactionRule = () => {
   return [
@@ -49,6 +50,36 @@ const validateEditTransactionDetailRule = () => {
   ];
 };
 
+const validateDeleteEmptyTransaction = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const thisTransaction = await db.Transaction.findByPk(id, {
+      logging: false,
+      include: [
+        {
+          model: db.Transaction_details,
+          attributes: [
+            "id",
+            "transactionId",
+            "status",
+            "productId",
+            "price",
+            "qty",
+          ],
+        },
+      ],
+    });
+    if (!thisTransaction) throw new Error("invalid ID");
+    if (thisTransaction?.dataValues?.isPaid)
+      throw new Error("Unable to delete settled transaction");
+    if (thisTransaction?.dataValues?.Transaction_details?.length > 0)
+      throw new Error("This transaction is not Empty");
+    next();
+  } catch (err) {
+    return res.status(400).send(err?.message);
+  }
+};
+
 const generalValidate = (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -72,4 +103,5 @@ module.exports = {
   validateNewTransactionDetailRule,
   validateMultiValueTransactionDetailRule,
   generalValidate,
+  validateDeleteEmptyTransaction,
 };

@@ -3,6 +3,7 @@ const {
   validateEditTransactionRule,
   generalValidate,
   validateNewTransactionRule,
+  validateDeleteEmptyTransaction,
 } = require("../middlewares/validators/transaction.validator");
 const {
   cashierValidator,
@@ -34,6 +35,13 @@ route.patch(
   generalValidate,
   cashierValidator,
   TransactionController.update.bind(TransactionController)
+);
+
+route.delete(
+  `/:id`,
+  validateDeleteEmptyTransaction,
+  cashierValidator,
+  TransactionController.delete.bind(TransactionController)
 );
 
 module.exports = route;

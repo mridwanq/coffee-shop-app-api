@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { Sequelize, sequelize, Product } = require("../models");
 
 const productController = {
@@ -145,6 +146,50 @@ const productController = {
       res.status(200).json({ status: "Success" });
     } catch (error) {
       res.status(500).send(error?.message);
+    }
+  },
+
+  updateAfterTransaction: async (req, res) => {
+    try {
+      const { multiValue, transaction } = req.body;
+      const products = await Product.bulkCreate(
+        multiValue.map((product) => {
+          return {
+            id: product.productId,
+            stock: sequelize.literal(
+              `(SELECT stock FROM (SELECT * FROM Products WHERE id = ${product.productId})AS anung) + ${product.updateStock}`
+            ),
+            previousStock: sequelize.literal(
+              `(SELECT stock FROM (SELECT * FROM Products WHERE id = ${product.productId})AS anung)`
+            ),
+            updatedAt: sequelize.fn("NOW"),
+          };
+        }),
+        {
+          updateOnDuplicate: ["stock", "updatedAt"],
+          transaction: transaction,
+          validate: true,
+        }
+      );
+        
+      await Product.findAll({
+        attributes: ["productName", "stock"],
+        where: {
+          id: { [Op.in]: multiValue.map((product) => product.productId) },
+        },
+        transaction: transaction,
+      }).then((result) => {
+        result.forEach((product) => {
+          if (product.dataValues.stock < 0)
+            throw new Error(
+              `${product.dataValues.productName} has less stock than quantity requested`
+            );
+        });
+      });
+
+      return 1;
+    } catch (err) {
+      return err?.message;
     }
   },
 };
