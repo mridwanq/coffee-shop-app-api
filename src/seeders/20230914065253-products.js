@@ -26,6 +26,28 @@ module.exports = {
         createdAt: sequelize.fn("NOW"),
         updatedAt: sequelize.fn("NOW"),
       },
+      {
+        id: 2,
+        productName: "Tea",
+        imageName: "eventImage_2023-09-15-13-08-25.jpeg",
+        desc: "Hot",
+        price: 30000,
+        stock: 100,
+        category: null,
+        createdAt: "2023-09-15 13:08:25",
+        updatedAt: "2023-09-15 13:08:25",
+      },
+      {
+        id: 3,
+        productName: "Iced Matcha Fusion",
+        imageName: "eventImage_2023-09-15-13-10-40.jpeg",
+        desc: "Ice",
+        price: 55000,
+        stock: 100,
+        category: null,
+        createdAt: "2023-09-15 13:10:40",
+        updatedAt: "2023-09-15 13:10:40",
+      },
     ]);
   },
 

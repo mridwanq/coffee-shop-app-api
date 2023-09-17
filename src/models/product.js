@@ -1,4 +1,5 @@
 "use strict";
+const { options } = require("joi");
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
@@ -23,11 +24,30 @@ module.exports = (sequelize, DataTypes) => {
       imageName: DataTypes.STRING,
       desc: DataTypes.STRING,
       price: DataTypes.INTEGER,
-      stock: DataTypes.INTEGER,
+      stock: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: { isInt: true, min: 0 },
+      },
+      category: DataTypes.INTEGER,
     },
     {
       sequelize,
       modelName: "Product",
+      hooks: {
+        beforeBulkCreate: (instances, options) => {
+          // console.log(`instances before`, instances, `here`);
+          if (instances.stock < 0) {
+            throw new Error("Stock cannot be below zero");
+          }
+        },
+        afterBulkCreate: (instances, options) => {
+          // console.log(`instances after`, instances, `here`);
+          if (instances.stock < 0) {
+            throw new Error("Stock cannot be below zero");
+          }
+        },
+      },
     }
   );
   return Product;
