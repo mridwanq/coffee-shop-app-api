@@ -23,7 +23,9 @@ class TransactionController extends Controller {
               "price",
               "qty",
             ],
-            include: [{ model: db.Product, attributes: ["productName"] }],
+            include: [
+              { model: db.Product, attributes: ["productName", "stock"] },
+            ],
           },
           { model: db.Transaction_order_type, attributes: ["order_type"] },
         ],
