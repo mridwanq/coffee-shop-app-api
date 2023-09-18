@@ -55,12 +55,12 @@ const productController = {
 
   sortByProductName(req, res) {
     const { order } = req.query;
-    let sortingOrder = 'ASC';
-    if (order === 'desc') {
-      sortingOrder = 'DESC';
+    let sortingOrder = "ASC";
+    if (order === "desc") {
+      sortingOrder = "DESC";
     }
     Product.findAll({
-      order: [['productName', sortingOrder]],
+      order: [["productName", sortingOrder]],
     })
       .then((result) => res.send(result))
       .catch((err) => res.status(500).send(err?.message));
@@ -68,12 +68,12 @@ const productController = {
 
   sortByPrice(req, res) {
     const { order } = req.query;
-    let sortingOrder = 'ASC';
-    if (order === 'desc') {
-      sortingOrder = 'DESC';
+    let sortingOrder = "ASC";
+    if (order === "desc") {
+      sortingOrder = "DESC";
     }
     Product.findAll({
-      order: [['price', sortingOrder]],
+      order: [["price", sortingOrder]],
     })
       .then((result) => res.send(result))
       .catch((err) => {
@@ -92,7 +92,7 @@ const productController = {
       });
     } catch (error) {
       res.status(500).json({
-        message: 'Product already exists',
+        message: "Product already exists",
       });
     }
   },
@@ -113,7 +113,7 @@ const productController = {
 
       await existingProduct.update({ ...productData });
       res.status(200).json({
-        message: 'Success',
+        message: "Success",
         updatedProduct: existingProduct,
       });
     } catch (err) {
@@ -143,6 +143,10 @@ const productController = {
             stock: sequelize.literal(
               `(SELECT stock FROM (SELECT * FROM Products WHERE id = ${product.productId})AS anung) + ${product.updateStock}`
             ),
+            productName: "gapenting",
+            imageName: "gapenting",
+            desc: "gapenting",
+            price: 1,
             previousStock: sequelize.literal(
               `(SELECT stock FROM (SELECT * FROM Products WHERE id = ${product.productId})AS anung)`
             ),
@@ -152,10 +156,9 @@ const productController = {
         {
           updateOnDuplicate: ["stock", "updatedAt"],
           transaction: transaction,
-          validate: true,
+          // validate: true,
         }
       );
-        
       await Product.findAll({
         attributes: ["productName", "stock"],
         where: {
@@ -173,6 +176,7 @@ const productController = {
 
       return 1;
     } catch (err) {
+      console.log(err);
       return err?.message;
     }
   },

@@ -1,9 +1,9 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const bearertoken = require('express-bearer-token');
-const routers = require('./routes/index');
-const db = require('./models');
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const bearertoken = require("express-bearer-token");
+const routers = require("./routes/index");
+const db = require("./models");
 
 const PORT = process.env.PORT || 2000;
 
@@ -21,8 +21,8 @@ app.use(
   express.static(`${__dirname}/../public/images/productImages`)
 );
 
-app.get('/test', (req, res) => {
-  res.send('welcome my coffee shop API');
+app.get("/test", (req, res) => {
+  res.send("welcome my coffee shop API");
 });
 
 app.listen(PORT, () => {

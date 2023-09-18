@@ -67,7 +67,6 @@ class TransactionDetailController extends Controller {
       const multiValue = req.body;
       const updateThisToDB = [];
       const removeThisFromDB = [];
-
       await sequelize.transaction(async (t) => {
         for (let item of multiValue) {
           if (item.id) {
@@ -114,7 +113,6 @@ class TransactionDetailController extends Controller {
           logging: false,
           transaction: t,
         });
-
         return res.send("successfully update this transaction");
       });
     } catch (err) {
