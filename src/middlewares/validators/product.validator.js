@@ -21,6 +21,7 @@ const productValidator = {
     try {
       const schemaBody = Joi.object({
         productName: Joi.string().required(),
+        categoryId: Joi.number().min(1).required(),
         desc: Joi.string().required(),
         price: Joi.number().min(1).required(),
         stock: Joi.number().integer().min(1).required(),
@@ -69,6 +70,7 @@ const productValidator = {
 
       const schemaBody = Joi.object({
         productName: Joi.string().optional(),
+        categoryId: Joi.number().min(1).required(),
         desc: Joi.string().optional(),
         price: Joi.number().min(1).optional(),
         stock: Joi.number().integer().min(1).optional(),
