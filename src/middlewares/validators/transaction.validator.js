@@ -11,7 +11,7 @@ const validateNewTransactionRule = () => {
 const validateEditTransactionRule = () => {
   return [
     body("id").isInt({ min: 1 }),
-    body("total").isFloat({ gt: 0 }).optional({ nullable: true }),
+    body("total").isFloat({ gte: 0 }).optional({ nullable: true }),
     body("order_type").isInt({ min: 1 }),
     body("isPaid").isBoolean().optional({ nullable: true }),
     body("staff").isInt({ min: 1 }),

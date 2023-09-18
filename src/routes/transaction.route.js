@@ -16,6 +16,12 @@ route.get(
   TransactionController.getOutStandingTransaction.bind(TransactionController)
 );
 route.get(
+  "/order_type",
+  cashierValidator,
+  TransactionController.getOrderType.bind(TransactionController)
+);
+
+route.get(
   "/:id",
   cashierValidator,
   TransactionController.getOneWithDetail.bind(TransactionController)

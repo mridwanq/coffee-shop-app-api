@@ -24,7 +24,7 @@ class TransactionController extends Controller {
               "qty",
             ],
             include: [
-              { model: db.Product, attributes: ["productName", "stock"] },
+              { model: db.Product, attributes: ["id", "productName", "stock"] },
             ],
           },
           { model: db.Transaction_order_type, attributes: ["order_type"] },
@@ -43,6 +43,15 @@ class TransactionController extends Controller {
       })
       .then((result) => res.send(result))
       .catch((err) => res.status(500).send(err?.message));
+  };
+
+  getOrderType = async (req, res) => {
+    try {
+      const result = await db.Transaction_order_type.findAll();
+      return res.send(result);
+    } catch (err) {
+      return res.status(500).send(err?.message);
+    }
   };
 }
 
