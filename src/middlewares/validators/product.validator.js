@@ -68,10 +68,10 @@ const productValidator = {
         throw new Error(resultParams.error?.message || resultParams.error, 400);
 
       const schemaBody = Joi.object({
-        productName: Joi.string().required(),
-        desc: Joi.string().required(),
-        price: Joi.number().min(1).required(),
-        stock: Joi.number().integer().min(1).required(),
+        productName: Joi.string().optional(),
+        desc: Joi.string().optional(),
+        price: Joi.number().min(1).optional(),
+        stock: Joi.number().integer().min(1).optional(),
       }).required();
 
       const resultBody = schemaBody.validate(req.body);

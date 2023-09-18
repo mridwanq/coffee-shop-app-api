@@ -29,46 +29,18 @@ const productController = {
 
   getProductByName: async (req, res) => {
     try {
-      const { productName } = req.query;
+      const { productName, orderBy, sortBy } = req.query;
+      const sort = {};
+
+      if (orderBy && sortBy) sort.order = [[orderBy, sortBy]];
+      console.log(req.query);
       const result = await Product.findAll({
         where: {
           productName: {
             [Sequelize.Op.like]: `%${productName}%`,
           },
         },
-      });
-      if (!result) throw new Error('Product not found');
-
-      res.status(200).json({
-        status: 'Success',
-        data: result,
-      });
-    } catch (error) {
-      res.status(500).send(error?.message);
-    }
-  },
-
-  sortByProductNameAsc: async (req, res) => {
-    try {
-      const result = await Product.findAll({
-        where: {},
-        order: [['productName', 'ASC']],
-      });
-
-      res.status(200).json({
-        status: 'Success',
-        data: result,
-      });
-    } catch (error) {
-      res.status(500).send(error.message);
-    }
-  },
-
-  sortByProductNameDesc: async (req, res) => {
-    try {
-      const result = await Product.findAll({
-        where: {},
-        order: [['productName', 'DESC']],
+        ...sort,
       });
 
       res.status(200).json({
@@ -80,36 +52,32 @@ const productController = {
     }
   },
 
-  sortByPriceAsc: async (req, res) => {
-    try {
-      const result = await Product.findAll({
-        where: {},
-        order: [['price', 'ASC']],
-      });
-
-      res.status(200).json({
-        status: 'Success',
-        data: result,
-      });
-    } catch (error) {
-      res.status(500).send(error?.message);
+  sortByProductName(req, res) {
+    const { order } = req.query;
+    let sortingOrder = 'ASC';
+    if (order === 'desc') {
+      sortingOrder = 'DESC';
     }
+    Product.findAll({
+      order: [['productName', sortingOrder]],
+    })
+      .then((result) => res.send(result))
+      .catch((err) => res.status(500).send(err?.message));
   },
 
-  sortByPriceDesc: async (req, res) => {
-    try {
-      const result = await Product.findAll({
-        where: {},
-        order: [['price', 'DESC']],
-      });
-
-      res.status(200).json({
-        status: 'Success',
-        data: result,
-      });
-    } catch (error) {
-      res.status(500).send(error?.message);
+  sortByPrice(req, res) {
+    const { order } = req.query;
+    let sortingOrder = 'ASC';
+    if (order === 'desc') {
+      sortingOrder = 'DESC';
     }
+    Product.findAll({
+      order: [['price', sortingOrder]],
+    })
+      .then((result) => res.send(result))
+      .catch((err) => {
+        res.status(500).send(err?.message);
+      });
   },
 
   createProduct: async (req, res) => {
@@ -122,18 +90,34 @@ const productController = {
         data: result,
       });
     } catch (error) {
-      res.status(500).send(error?.message);
+      res.status(500).json({
+        message: 'Product already exists',
+      });
     }
   },
 
-  editProductById: async (req, res, next) => {
+  editProductById: async (req, res) => {
     try {
-      const { id } = req.params;
-      await Product.update({ ...req.body }, { where: { id } });
+      if (req.file) req.body.imageName = req.file.filename;
 
-      next();
-    } catch (error) {
-      res.status(500).send(error?.message);
+      const { id } = req.params;
+
+      const productData = req.body;
+
+      const existingProduct = await Product.findByPk(id);
+
+      if (!existingProduct) {
+        return res.status(404).json({ message: `Product not found!` });
+      }
+
+      await existingProduct.update({ ...productData });
+      res.status(200).json({
+        message: 'Success',
+        updatedProduct: existingProduct,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send(err?.message);
     }
   },
 

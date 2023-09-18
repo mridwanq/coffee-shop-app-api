@@ -21,7 +21,7 @@ const productMulter = {
       },
       filename: (req, file, cb) => {
         const fileExtention = file.mimetype.split('/')[1];
-        const filename = `eventImage_${moment().format(
+        const filename = `productImage_${moment().format(
           'YYYY-MM-DD-HH-mm-ss'
         )}.${fileExtention}`;
 

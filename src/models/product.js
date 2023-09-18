@@ -9,15 +9,39 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      // models.Product.belongsTo(models.User, {
+      //   foreignKey: {
+      //     name: 'userId',
+      //     allowNull: false,
+      //   },
+      //   onDelete: 'CASCADE',
+      //   onUpdate: 'CASCADE',
+      // });
     }
   }
   Product.init(
     {
-      productName: DataTypes.STRING,
-      imageName: DataTypes.STRING,
-      desc: DataTypes.STRING,
-      price: DataTypes.INTEGER,
-      stock: DataTypes.INTEGER,
+      productName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      imageName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      desc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      price: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+      },
+      stock: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
       sequelize,

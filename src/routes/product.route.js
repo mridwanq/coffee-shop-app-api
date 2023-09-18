@@ -9,17 +9,11 @@ router.get('/', productController.getAllProducts);
 // get product by name
 router.get('/search', productController.getProductByName);
 
-// get product name by ascending
-router.get('/v1', productController.sortByProductNameAsc);
+// sort by product name
+router.get('/p1', productController.sortByProductName);
 
-// get product name by descending
-router.get('/v2', productController.sortByProductNameDesc);
-
-// get price by ascending
-router.get('/p1', productController.sortByPriceAsc);
-
-// get price by descending
-router.get('/p2', productController.sortByPriceDesc);
+// sort by price
+router.get('/p2', productController.sortByPrice);
 
 // get product by id
 router.get(
@@ -39,9 +33,9 @@ router.post(
 // edit product by id
 router.patch(
   '/:id',
+  productMulter.productImageUploader().single('productImage'),
   productValidator.editProduct,
-  productController.editProductById,
-  productController.getProductById
+  productController.editProductById
 );
 
 //delete product by id
