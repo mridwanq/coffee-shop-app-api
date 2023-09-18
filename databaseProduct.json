@@ -1,0 +1,35 @@
+[
+	{
+		"id" : 1,
+		"productName" : "Kopi Tubruk",
+		"imageName" : "eventImage_2023-09-14-15-20-49.jpeg",
+		"desc" : "Cap Jagung",
+		"price" : 16000,
+		"stock" : 999,
+		"category" : 1,
+		"createdAt" : "2023-09-15 12:17:18",
+		"updatedAt" : "2023-09-15 12:17:18"
+	},
+	{
+		"id" : 2,
+		"productName" : "Tea",
+		"imageName" : "eventImage_2023-09-15-13-08-25.jpeg",
+		"desc" : "Hot",
+		"price" : 30000,
+		"stock" : 100,
+		"category" : null,
+		"createdAt" : "2023-09-15 13:08:25",
+		"updatedAt" : "2023-09-15 13:08:25"
+	},
+	{
+		"id" : 3,
+		"productName" : "Iced Matcha Fusion",
+		"imageName" : "eventImage_2023-09-15-13-10-40.jpeg",
+		"desc" : "Ice",
+		"price" : 55000,
+		"stock" : 100,
+		"category" : null,
+		"createdAt" : "2023-09-15 13:10:40",
+		"updatedAt" : "2023-09-15 13:10:40"
+	}
+]

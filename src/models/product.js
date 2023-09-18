@@ -1,5 +1,6 @@
-'use strict';
-const { Model } = require('sequelize');
+"use strict";
+const { options } = require("joi");
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     /**
@@ -9,18 +10,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // models.Product.belongsTo(models.User, {
-      //   foreignKey: {
-      //     name: 'userId',
-      //     allowNull: false,
-      //   },
-      //   onDelete: 'CASCADE',
-      //   onUpdate: 'CASCADE',
-      // });
+      models.Product.belongsTo(models.Category, {
+        foreignKey: {
+          name: "categoryId",
+        },
+      });
+      Product.hasMany(models.Transaction_details, { foreignKey: "productId" });
     }
   }
   Product.init(
     {
+
       productName: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -38,14 +38,32 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.FLOAT,
         allowNull: false,
       },
+
       stock: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: { isInt: true, min: 0 },
       },
+      category: DataTypes.INTEGER,
+
     },
     {
       sequelize,
-      modelName: 'Product',
+      modelName: "Product",
+      hooks: {
+        beforeBulkCreate: (instances, options) => {
+          // console.log(`instances before`, instances, `here`);
+          if (instances.stock < 0) {
+            throw new Error("Stock cannot be below zero");
+          }
+        },
+        afterBulkCreate: (instances, options) => {
+          // console.log(`instances after`, instances, `here`);
+          if (instances.stock < 0) {
+            throw new Error("Stock cannot be below zero");
+          }
+        },
+      },
     }
   );
   return Product;
