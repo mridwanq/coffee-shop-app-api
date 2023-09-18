@@ -20,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   Product.init(
     {
-
       productName: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -44,8 +43,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: { isInt: true, min: 0 },
       },
-      category: DataTypes.INTEGER,
-
     },
     {
       sequelize,
