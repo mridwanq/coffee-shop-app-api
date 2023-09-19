@@ -7,6 +7,18 @@ class TransactionController extends Controller {
     super(modelName);
   }
 
+  getAll = async (req, res) => {
+    // const page = Number(req.query.page);
+    // const limit = 2;
+    await this.db
+      .findAndCountAll({
+        // offset: page * limit,
+        // limit: limit,
+        include: [{ model: db.Transaction_details }],
+      })
+      .then((result) => res.send(result));
+  };
+
   getOneWithDetail = async (req, res) => {
     const { id } = req.params;
     await this.db

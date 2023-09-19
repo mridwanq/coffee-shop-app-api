@@ -10,6 +10,8 @@ const {
 } = require("../middlewares/validators/user.validator");
 const route = require("express").Router();
 
+route.get("/invoice", TransactionController.getAll.bind(TransactionController));
+
 route.get(
   "/outstanding",
   cashierValidator,
