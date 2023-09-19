@@ -34,7 +34,7 @@ route.post(
   validateNewTransactionRule(),
   generalValidate,
   cashierValidator,
-  TransactionController.create.bind(TransactionController)
+  TransactionController.newTransaction.bind(TransactionController)
 );
 
 route.patch(

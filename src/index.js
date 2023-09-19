@@ -1,31 +1,39 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const bearertoken = require('express-bearer-token');
-const routers = require('./routes/index');
-const db = require('./models');
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const bearertoken = require("express-bearer-token");
+const routers = require("./routes/index");
+const db = require("./models");
+const app = express();
+
+//socket-io
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server, { cors: { origin: "*" } });
+global.io = io;
+module.exports = { io };
 
 const PORT = process.env.PORT || 2000;
 
-const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(bearertoken());
-app.use('/users', routers.userRouter);
-app.use('/products', routers.productRouter);
-app.use('/category', routers.categoryRouter);
-app.use('/transactions', routers.transactionRouter);
-app.use('/transaction_details', routers.transactionDetailRouter);
+app.use("/users", routers.userRouter);
+app.use("/products", routers.productRouter);
+app.use("/category", routers.categoryRouter);
+app.use("/transactions", routers.transactionRouter);
+app.use("/transaction_details", routers.transactionDetailRouter);
 app.use(
-  '/public/product',
+  "/public/product",
   express.static(`${__dirname}/../public/images/productImages`)
 );
 
-app.get('/test', (req, res) => {
-  res.send('welcome my coffee shop API');
+app.get("/test", (req, res) => {
+  res.send("welcome my coffee shop API");
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
   // db.sequelize.sync({ alter: true });
 });
