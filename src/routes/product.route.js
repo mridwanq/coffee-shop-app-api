@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const { productController } = require('../controllers');
+const { productAuth, userAuth } = require('../middlewares/auth');
 const { productMulter } = require('../middlewares/multers');
 const { productValidator } = require('../middlewares/validators');
+const { adminValidator } = require('../middlewares/validators/user.validator');
 
 // get all products
 router.get('/', productController.getAllProducts);
@@ -26,6 +28,7 @@ router.get(
 router.post(
   '/',
   productMulter.productImageUploader().single('productImage'),
+  adminValidator,
   productValidator.createProduct,
   productController.createProduct
 );
@@ -34,6 +37,7 @@ router.post(
 router.patch(
   '/:id',
   productMulter.productImageUploader().single('productImage'),
+  adminValidator,
   productValidator.editProduct,
   productController.editProductById
 );
@@ -42,6 +46,7 @@ router.patch(
 router.delete(
   '/:id',
   productValidator.deleteProductById,
+  adminValidator,
   productController.deleteProductById
 );
 
