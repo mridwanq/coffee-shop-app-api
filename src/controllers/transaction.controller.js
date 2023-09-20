@@ -7,6 +7,19 @@ class TransactionController extends Controller {
     super(modelName);
   }
 
+  newTransaction = async (req, res) => {
+    await this.db
+      .create({
+        ...req.body,
+        logging: false,
+      })
+      .then((result) => {
+        global.io?.emit(`NEW_TRANSACTION`, result.dataValues);
+        return res.send(result.dataValues);
+      })
+      .catch((err) => res.status(500).send(err?.message));
+  };
+
   getAll = async (req, res) => {
     // const page = Number(req.query.page);
     // const limit = 2;

@@ -13,7 +13,8 @@
     "multer": "^1.4.5-lts.1",
     "mustache": "^4.2.0",
     "mysql2": "^3.6.0",
-    "sequelize": "^6.32.1"
+    "sequelize": "^6.32.1",
+    "socket.io": "^4.7.2"
   },
   "name": "coffee-shop-api",
   "description": "",
