@@ -8,15 +8,82 @@ class TransactionController extends Controller {
   }
 
   getAll = async (req, res) => {
-    // const page = Number(req.query.page);
-    // const limit = 2;
+    const page = Number(req.query.page);
+    const limit = 5;
+    const { datefrom, dateto } = req.query;
+    const data = await this.db.count({
+      where: {
+        ...(datefrom && !dateto
+          ? {
+              createdAt: {
+                [Op.and]: [{ [Op.gte]: new Date(datefrom) }],
+              },
+            }
+          : null),
+        ...(!datefrom && dateto
+          ? {
+              createdAt: {
+                [Op.and]: [{ [Op.lte]: new Date(dateto + ` 23:59:59`) }],
+              },
+            }
+          : null),
+        ...(datefrom && dateto
+          ? {
+              createdAt: {
+                [Op.and]: [
+                  { [Op.gte]: new Date(datefrom) },
+                  { [Op.lte]: new Date(dateto + ` 23:59:59`) },
+                ],
+              },
+            }
+          : null),
+      },
+    });
     await this.db
       .findAndCountAll({
-        // offset: page * limit,
-        // limit: limit,
-        include: [{ model: db.Transaction_details }],
+        order: [["createdAt", "DESC"]],
+        logging: false,
+        where: {
+          ...(datefrom && !dateto
+            ? {
+                createdAt: {
+                  [Op.and]: [{ [Op.gte]: new Date(datefrom) }],
+                },
+              }
+            : null),
+          ...(!datefrom && dateto
+            ? {
+                createdAt: {
+                  [Op.and]: [{ [Op.lte]: new Date(dateto + ` 23:59:59`) }],
+                },
+              }
+            : null),
+          ...(datefrom && dateto
+            ? {
+                createdAt: {
+                  [Op.and]: [
+                    { [Op.gte]: new Date(datefrom) },
+                    { [Op.lte]: new Date(dateto + ` 23:59:59`) },
+                  ],
+                },
+              }
+            : null),
+        },
+        offset: page ? (Number(page) - 1) * limit : 0 * limit,
+        limit: limit,
+        include: [
+          { model: db.Transaction_details, include: [{ model: db.Product }] },
+          { model: db.Transaction_order_type },
+          { model: db.User },
+        ],
       })
-      .then((result) => res.send(result));
+      .then((result) => {
+        res.send({
+          count: data,
+          number_of_page: Math.ceil(data / limit),
+          data: result.rows,
+        });
+      });
   };
 
   getOneWithDetail = async (req, res) => {
