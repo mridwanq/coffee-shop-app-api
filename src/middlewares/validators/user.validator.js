@@ -79,7 +79,6 @@ const deleteCashierAccountValidator = async (req, res, next) => {
     const username = req.headers["api-key"];
     const password = req.headers["delete-password"];
     const user = await db.User.findOne({ where: { username }, logging: false });
-    console.log(user);
     if (!user) throw new Error("Your credential does not match");
     const isValid = await bcrypt.compare(password, user.dataValues.password);
     if (!isValid) throw new Error("Your credential does not match");
