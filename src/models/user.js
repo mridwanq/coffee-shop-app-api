@@ -1,5 +1,5 @@
-'use strict';
-const { Model } = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       //   onDelete: 'CASCADE',
       //   onUpdate: 'CASCADE',
       // });
+      User.hasMany(models.Transaction, { foreignKey: "staff" });
     }
   }
   User.init(
@@ -29,12 +30,12 @@ module.exports = (sequelize, DataTypes) => {
       phone: { type: DataTypes.STRING, allowNull: true, unique: true },
       fullname: { type: DataTypes.STRING, allowNull: false },
       image_url: DataTypes.STRING,
-      gender: DataTypes.ENUM('male', 'female'),
+      gender: DataTypes.ENUM("male", "female"),
       isActive: DataTypes.BOOLEAN,
     },
     {
       sequelize,
-      modelName: 'User',
+      modelName: "User",
     }
   );
   return User;

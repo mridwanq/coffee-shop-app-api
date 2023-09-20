@@ -9,6 +9,22 @@ const categoryController = {
       res.status(500).send(error?.message);
     }
   },
+  getPageCategories: async (req, res) => {
+    try {
+      const { page, limit } = req.query;
+
+      // const offset = Number(page == 1 ? 0 : (page - 1) * limit);
+      console.log(Number(limit));
+      const result = await Category.findAndCountAll({
+        limit: Number(limit),
+        offset: Number(page),
+      });
+      const total_page = Math.ceil(result.count / limit);
+      res.status(200).json({ total_page, ...result });
+    } catch (error) {
+      res.status(500).send(error?.message);
+    }
+  },
 
   getCategoryById: async (req, res) => {
     try {

@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       Transaction.belongsTo(models.Transaction_order_type, {
         foreignKey: "order_type",
       });
+      Transaction.belongsTo(models.User, { foreignKey: "staff" });
     }
   }
   Transaction.init(
