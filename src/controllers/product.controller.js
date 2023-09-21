@@ -1,12 +1,15 @@
-const { Op } = require('sequelize');
-const { Sequelize, sequelize, Product } = require('../models');
+const { Op } = require("sequelize");
+const { Sequelize, sequelize, Product, Category } = require("../models");
 
 const productController = {
   getAllProducts: async (req, res) => {
     try {
-      const result = await Product.findAll({ logging: false });
+      const result = await Product.findAll({
+        logging: false,
+        include: [{ model: Category }],
+      });
       res.status(200).json({
-        status: 'success',
+        status: "success",
         data: result,
       });
     } catch (error) {
@@ -17,10 +20,10 @@ const productController = {
   getProductById: async (req, res) => {
     try {
       const result = await Product.findByPk(req.params.id);
-      if (!result) throw new Error('Product not found');
+      if (!result) throw new Error("Product not found");
 
       res.status(200).json({
-        status: 'success',
+        status: "success",
         data: result,
       });
     } catch (error) {
@@ -49,10 +52,11 @@ const productController = {
       const result = await Product.findAll({
         where: search,
         ...sort,
+        include: [{ model: Category }],
       });
 
       res.status(200).json({
-        status: 'Success',
+        status: "Success",
         data: result,
       });
     } catch (error) {
@@ -62,12 +66,12 @@ const productController = {
 
   sortByProductName(req, res) {
     const { order } = req.query;
-    let sortingOrder = 'ASC';
-    if (order === 'desc') {
-      sortingOrder = 'DESC';
+    let sortingOrder = "ASC";
+    if (order === "desc") {
+      sortingOrder = "DESC";
     }
     Product.findAll({
-      order: [['productName', sortingOrder]],
+      order: [["productName", sortingOrder]],
     })
       .then((result) => res.send(result))
       .catch((err) => res.status(500).send(err?.message));
@@ -75,12 +79,12 @@ const productController = {
 
   sortByPrice(req, res) {
     const { order } = req.query;
-    let sortingOrder = 'ASC';
-    if (order === 'desc') {
-      sortingOrder = 'DESC';
+    let sortingOrder = "ASC";
+    if (order === "desc") {
+      sortingOrder = "DESC";
     }
     Product.findAll({
-      order: [['price', sortingOrder]],
+      order: [["price", sortingOrder]],
     })
       .then((result) => res.send(result))
       .catch((err) => {
@@ -94,12 +98,12 @@ const productController = {
       const result = await Product.create({ ...req.body });
 
       res.status(200).json({
-        status: 'Success',
+        status: "Success",
         data: result,
       });
     } catch (error) {
       res.status(500).json({
-        message: 'Product already exists',
+        message: "Product already exists",
       });
     }
   },
@@ -120,7 +124,7 @@ const productController = {
 
       await existingProduct.update({ ...productData });
       res.status(200).json({
-        message: 'Success',
+        message: "Success",
         updatedProduct: existingProduct,
       });
     } catch (err) {
@@ -132,9 +136,9 @@ const productController = {
   deleteProductById: async (req, res) => {
     try {
       const result = await Product.destroy({ where: { id: req.params.id } });
-      if (!result) throw new Error('Product not found');
+      if (!result) throw new Error("Product not found");
 
-      res.status(200).json({ status: 'Success' });
+      res.status(200).json({ status: "Success" });
     } catch (error) {
       res.status(500).send(error?.message);
     }
@@ -150,24 +154,24 @@ const productController = {
             stock: sequelize.literal(
               `(SELECT stock FROM (SELECT * FROM Products WHERE id = ${product.productId})AS anung) + ${product.updateStock}`
             ),
-            productName: 'gapenting',
-            imageName: 'gapenting',
-            desc: 'gapenting',
+            productName: "gapenting",
+            imageName: "gapenting",
+            desc: "gapenting",
             price: 1,
             previousStock: sequelize.literal(
               `(SELECT stock FROM (SELECT * FROM Products WHERE id = ${product.productId})AS anung)`
             ),
-            updatedAt: sequelize.fn('NOW'),
+            updatedAt: sequelize.fn("NOW"),
           };
         }),
         {
-          updateOnDuplicate: ['stock', 'updatedAt'],
+          updateOnDuplicate: ["stock", "updatedAt"],
           transaction: transaction,
           // validate: true,
         }
       );
       await Product.findAll({
-        attributes: ['productName', 'stock'],
+        attributes: ["productName", "stock"],
         where: {
           id: { [Op.in]: multiValue.map((product) => product.productId) },
         },
