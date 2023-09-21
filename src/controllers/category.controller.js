@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, Category } = require("../models");
+const { Sequelize, sequelize, Category, Product } = require("../models");
 
 const categoryController = {
   getAllCategories: async (req, res) => {
