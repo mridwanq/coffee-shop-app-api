@@ -1,6 +1,7 @@
 const Controller = require("./baseController");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { Op } = require("sequelize");
 
 class UserController extends Controller {
   constructor(modelName) {
@@ -60,14 +61,24 @@ class UserController extends Controller {
 
   async getByQuery(req, res) {
     try {
-      const { username, fullname, email, phone, role, gender } = req.query;
+      const { username, fullname, email, phone, role, gender, page } =
+        req.query;
+      const limit = 2;
       const { count, rows } = await this.db.findAndCountAll({
         logging: false,
+        limit: limit,
+        offset: page ? (Number(page) - 1) * limit : 0,
         where: {
+          ...(username && {
+            [Op.or]: [
+              { username: { [Op.like]: `%${username}%` } },
+              { fullname: { [Op.like]: `%${username}%` } },
+            ],
+          }),
           ...(typeof role === "string" && { role }),
         },
       });
-      return res.send(rows);
+      return res.send({ page: Math.ceil(count / limit), rows });
     } catch (err) {
       return res.status(500).send(err?.message);
     }
