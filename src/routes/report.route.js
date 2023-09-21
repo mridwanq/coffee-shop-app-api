@@ -5,6 +5,6 @@ const { reportController } = require('../controllers');
 router.get('/', reportController.getAllReports);
 
 // get by day
-router.get('/p1', reportController.getReportByDay);
+router.get('/p1', reportController.getReportByDate);
 
 module.exports = router;
