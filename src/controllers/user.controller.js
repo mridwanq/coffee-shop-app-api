@@ -63,7 +63,7 @@ class UserController extends Controller {
     try {
       const { username, fullname, email, phone, role, gender, page } =
         req.query;
-      const limit = 2;
+      const limit = 12;
       const { count, rows } = await this.db.findAndCountAll({
         logging: false,
         limit: limit,
